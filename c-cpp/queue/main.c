@@ -44,5 +44,14 @@ int main()
     LIST_REMOVE(&e0, entries);
     PRINTLIST(pe, &head, entries);
 
+
+    LIST_INIT(&head);
+    PRINTLIST(pe, &head, entries);
+
+    LIST_INSERT_HEAD(&head, &e0, entries);
+    LIST_INSERT_HEAD(&head, &e1, entries);
+    LIST_INSERT_HEAD(&head, &e2, entries);
+    PRINTLIST(pe, &head, entries);
+
     return 0;
 }
