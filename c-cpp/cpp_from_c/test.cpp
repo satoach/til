@@ -15,7 +15,7 @@ struct flist_st {
 
 int do_map(void)
 {
-    std::map<std::string, struct flist_st> m;
+    std::map<std::string, struct flist_st, std::greater<std::string> > m;
 
     for (int i = 0; i < 100; i++) {
         std::stringstream key;
