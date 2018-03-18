@@ -2,17 +2,20 @@ package main
 
 import (
 	"encoding/hex"
+	"flag"
 	"fmt"
 	"io/ioutil"
 	"log"
 )
 
 func main() {
-	filepath := "file.txt"
-	rawdata, err := ioutil.ReadFile(filepath)
+	var filepath string
+	flag.StringVar(&filepath, "p", "file.txt", "file path")
+	flag.Parse()
 
+	rawdata, err := ioutil.ReadFile(filepath)
 	if err != nil {
-		log.Panicf("%s read failed", filepath)
+		log.Fatalf("%s read failed", filepath)
 	}
 
 	fmt.Println(hex.Dump(rawdata))
