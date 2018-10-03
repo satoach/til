@@ -57,19 +57,49 @@ int main(int argc, char *argv[])
     checker2(D, );
 #undef checker2
 
-#define offsetof(TYPE, MEMBER) ((size_t) & ((TYPE *)0)->MEMBER)
+#define dataof(TYPE, MEMBER) (((TYPE *)0)->MEMBER)
+#define membersizeof(TYPE, MEMBER) sizeof(dataof(TYPE, MEMBER))
+#define offsetof(TYPE, MEMBER) ((size_t)&dataof(TYPE, MEMBER))
     printf("=======\n");
     printf("%lu\n", offsetof(struct funclist, A));
     printf("%lu\n", offsetof(struct funclist, B));
     printf("%lu\n", offsetof(struct funclist, C));
     printf("%lu\n", offsetof(struct funclist, D));
 
-#define offsetofsize(TYPE, MEMBER) (offsetof(TYPE, MEMBER) + sizeof(((TYPE *)0)->MEMBER))
+#define offsetofsize(TYPE, MEMBER) (offsetof(TYPE, MEMBER) + membersizeof(TYPE, MEMBER))
     printf("=======\n");
     printf("%lu\n", offsetofsize(struct funclist, A));
     printf("%lu\n", offsetofsize(struct funclist, B));
     printf("%lu\n", offsetofsize(struct funclist, C));
     printf("%lu\n", offsetofsize(struct funclist, D));
+
+#include <string.h>
+    {
+        struct Prop {
+            char a;
+            int b;
+            short c;
+            char d[7];
+        };
+        struct Prop org = {
+            .a = '1',
+            .b = 2,
+            .c = 3,
+            .d = "d = d",
+        };
+        struct Prop prop = {0};
+        printf("=======\n");
+        memcpy(&prop.a, (void*)&org + offsetof(struct Prop, a), membersizeof(struct Prop, a));
+        memcpy(&prop.b, (void*)&org + offsetof(struct Prop, b), membersizeof(struct Prop, b));
+        memcpy(&prop.c, (void*)&org + offsetof(struct Prop, c), membersizeof(struct Prop, c));
+        memcpy(&prop.d, (void*)&org + offsetof(struct Prop, d), membersizeof(struct Prop, d));
+
+        printf("%lu \t %lu \t %c\n", offsetof(struct Prop, a), membersizeof(struct Prop, a), prop.a);
+        printf("%lu \t %lu \t %d\n", offsetof(struct Prop, b), membersizeof(struct Prop, b), prop.b);
+        printf("%lu \t %lu \t %d\n", offsetof(struct Prop, c), membersizeof(struct Prop, c), prop.c);
+        printf("%lu \t %lu \t %s\n", offsetof(struct Prop, d), membersizeof(struct Prop, d), prop.d);
+    }
+
 #undef offsetofsize
 #undef offsetof
 
