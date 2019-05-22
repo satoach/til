@@ -1,4 +1,4 @@
 # til
 today i learned
 
-programing memo, misc.
+programing note, misc.
